@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Suggestion</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { padding: 8px; width: 300px; }
+        button { padding: 8px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #result { margin-top: 20px; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #f9f9f9; padding: 10px; margin: 5px 0; border: 1px solid #ddd; }
+    </style>
+    <script>
+        async function fetchSuggestions(event) {
+            event.preventDefault();
+            const symptomInput = document.getElementById("symptom").value;
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "Fetching suggestions...";
+
+            const response = await fetch("{% url 'suggest_medicine' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: `symptom=${encodeURIComponent(symptomInput)}`
+            });
+
+            const data = await response.json();
+            if (data.suggestions && data.suggestions.length > 0) {
+                resultDiv.innerHTML = `
+                    <h2>Medicine Suggestions:</h2>
+                    <ul>${data.suggestions.map(item => `<li>${item}</li>`).join('')}</ul>
+                `;
+            } else {
+                resultDiv.innerHTML = "<p>No suggestions found.</p>";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Medicine Suggestion System</h1>
+    <form onsubmit="fetchSuggestions(event);">
+        <input type="text" id="symptom" placeholder="Enter symptom or disease" required>
+        <button type="submit">Get Suggestions</button>
+    </form>
+    <div id="result"></div>
+</body>
+</html>

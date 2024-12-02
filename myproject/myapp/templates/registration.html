@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="container">
+    {% if error %}
+        <div class="error-messages">
+            <p class="error">{{ error }}</p>
+        </div>
+    {% endif %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <h2>Registration</h2>
+        
+        <!-- Username input field -->
+        <label for="username">Username</label>
+        <input type="text" name="username" required placeholder="Enter username">
+        
+        <!-- Email input field -->
+        <label for="email">Email</label>
+        <input type="email" name="email" required placeholder="Enter email">
+        
+        <!-- Password input field -->
+        <label for="password">Password</label>
+        <input type="password" name="password" required placeholder="Enter password">
+        
+        <!-- Confirm password input field -->
+        <label for="cpassword">Confirm Password</label>
+        <input type="password" name="cpassword" required placeholder="Confirm password">
+        
+        <button type="submit">Sign Up</button> 
+    </form> 
+</div>
+</body>
+</html>
